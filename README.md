@@ -1,6 +1,8 @@
-# DevsBC/ci
+﻿# DevsBC/ci
 
-Shared GitHub Actions for **DevsBC** repos on GCP (`satoru-co`).
+Shared **public** GitHub Actions for **DevsBC** repos on GCP (satoru-co).
+
+> This repo must stay **public**. Private actions cannot be `uses:` from other repos on GitHub Free — Actions reports `repository not found` even if you own both.
 
 ## Why this repo exists
 
@@ -26,7 +28,7 @@ steps:
     # optional: with project_id / create_credentials_file / setup_gcloud
 ```
 
-For Firebase CLI, set `create_credentials_file: true` and use `GOOGLE_APPLICATION_CREDENTIALS` from the auth step outputs (see `itsbiblical` deploy workflow).
+For Firebase CLI, set `create_credentials_file: true` (see `itsbiblical` deploy workflow).
 
 ## Workflows in this repo
 
@@ -34,4 +36,4 @@ For Firebase CLI, set `create_credentials_file: true` and use `GOOGLE_APPLICATIO
 |----------|---------|
 | `wif-smoke.yml` | Manual check that WIF + gcloud work from GitHub |
 
-App-specific build/deploy (Cloud Run matrix, Angular, etc.) stays in each application repository.
+App-specific build/deploy stays in each application repository.
