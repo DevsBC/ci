@@ -1,0 +1,29 @@
+name: WIF smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: satoru-co
+          workload_identity_provider: projects/551149990002/locations/global/workloadIdentityPools/github/providers/github
+          service_account: gcp-ci-service-account-key@satoru-co.iam.gserviceaccount.com
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Who am I
+        run: |
+          gcloud auth list
+          gcloud config get-value account
+          gcloud projects describe satoru-co --format='value(projectId)'
