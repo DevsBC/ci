@@ -18,7 +18,7 @@ jobs:
         with:
           project_id: satoru-co
           workload_identity_provider: projects/551149990002/locations/global/workloadIdentityPools/github/providers/github
-          service_account: gcp-ci-service-account-key@satoru-co.iam.gserviceaccount.com
+          service_account: github-actions-deploy@satoru-co.iam.gserviceaccount.com
 
       - uses: google-github-actions/setup-gcloud@v2
 
