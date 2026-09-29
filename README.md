@@ -24,11 +24,17 @@ permissions:
   id-token: write
 
 steps:
-  - uses: DevsBC/ci/.github/actions/gcp-wif-auth@main
-    # optional: with project_id / create_credentials_file / setup_gcloud
+  - id: gcp
+    uses: DevsBC/ci/.github/actions/gcp-wif-auth@main
+
+  - uses: google-github-actions/setup-gcloud@v2
+
+  # gcloud / docker / firebase steps — set ADC when a tool needs the file explicitly:
+  env:
+    GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.gcp.outputs.credentials_file_path }}
 ```
 
-For Firebase CLI, set `create_credentials_file: true` (see `itsbiblical` deploy workflow).
+Always run `setup-gcloud` **after** this action in the **job** (not inside another composite). The action only performs WIF auth and leaves a credentials file for the rest of the job.
 
 ## Workflows in this repo
 

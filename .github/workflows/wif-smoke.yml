@@ -13,9 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/gcp-wif-auth
+      - id: gcp
+        uses: ./.github/actions/gcp-wif-auth
+
+      - uses: google-github-actions/setup-gcloud@v2
 
       - name: Who am I
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.gcp.outputs.credentials_file_path }}
         run: |
           gcloud auth list
           gcloud config get-value account
