@@ -32,13 +32,9 @@ runs:
         workload_identity_provider: projects/551149990002/locations/global/workloadIdentityPools/github/providers/github
         service_account: github-actions-deploy@${{ inputs.project_id }}.iam.gserviceaccount.com
         create_credentials_file: ${{ inputs.create_credentials_file }}
-        export_environment_variables: ${{ inputs.create_credentials_file }}
+        # Required for setup-gcloud and ADC; independent of create_credentials_file.
+        export_environment_variables: true
 
     - name: Setup gcloud
       if: inputs.setup_gcloud == 'true'
       uses: google-github-actions/setup-gcloud@v2
-
-    - name: Export credentials path
-      if: inputs.create_credentials_file == 'true'
-      shell: bash
-      run: echo "credentials_file_path=${{ steps.auth.outputs.credentials_file_path }}" >> "$GITHUB_ENV"
