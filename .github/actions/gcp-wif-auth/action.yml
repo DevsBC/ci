@@ -1,0 +1,44 @@
+# Shared GCP auth for DevsBC repos (Workload Identity Federation — no JSON keys).
+name: GCP WIF auth
+description: Authenticate to GCP via WIF using the org deploy service account
+
+inputs:
+  project_id:
+    description: GCP project ID
+    required: false
+    default: satoru-co
+  create_credentials_file:
+    description: Export ADC JSON for tools like Firebase CLI
+    required: false
+    default: "false"
+  setup_gcloud:
+    description: Run setup-gcloud after auth
+    required: false
+    default: "true"
+
+outputs:
+  credentials_file_path:
+    description: ADC JSON path when create_credentials_file is true
+    value: ${{ steps.auth.outputs.credentials_file_path }}
+
+runs:
+  using: composite
+  steps:
+    - name: Authenticate to Google Cloud (WIF)
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        project_id: ${{ inputs.project_id }}
+        workload_identity_provider: projects/551149990002/locations/global/workloadIdentityPools/github/providers/github
+        service_account: github-actions-deploy@${{ inputs.project_id }}.iam.gserviceaccount.com
+        create_credentials_file: ${{ inputs.create_credentials_file }}
+        export_environment_variables: ${{ inputs.create_credentials_file }}
+
+    - name: Setup gcloud
+      if: inputs.setup_gcloud == 'true'
+      uses: google-github-actions/setup-gcloud@v2
+
+    - name: Export credentials path
+      if: inputs.create_credentials_file == 'true'
+      shell: bash
+      run: echo "credentials_file_path=${{ steps.auth.outputs.credentials_file_path }}" >> "$GITHUB_ENV"
